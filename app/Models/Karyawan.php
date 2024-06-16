@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Karyawan extends Model
 {
-    // Nama tabel yang digunakan oleh model ini
-    protected $table = 'employees'; // Ubah sesuai dengan nama tabel yang benar
+    use HasFactory;
 
-    // Kolom yang boleh diisi melalui mass assignment
+    protected $table = 'employees';
+
     protected $fillable = ['name', 'position', 'email', 'phone'];
 }
+

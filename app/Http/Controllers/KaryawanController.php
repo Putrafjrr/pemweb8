@@ -30,4 +30,31 @@ class KaryawanController extends Controller
         Karyawan::create($request->all());
         return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
     }
+
+    public function edit($id)
+    {
+        $employee = Karyawan::find($id);
+        return view('employees.edit', compact('employee'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required',
+            'position' => 'required',
+            'email' => 'required|email|unique:employees,email,'.$id,
+            'phone' => 'required',
+        ]);
+
+        $employee = Karyawan::find($id);
+        $employee->update($request->all());
+        return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $employee = Karyawan::find($id);
+        $employee->delete();
+        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+    }
 }
