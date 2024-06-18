@@ -24,10 +24,19 @@ class KaryawanController extends Controller
             'name' => 'required',
             'position' => 'required',
             'email' => 'required|email|unique:employees',
-            'phone' => 'required',
+            'phone' => 'required|regex:/^[0-9]+$/',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Karyawan::create($request->all());
+        $data = $request->all();
+        
+        if ($request->hasFile('photo')) {
+            $imageName = time().'.'.$request->photo->extension();
+            $request->photo->move(public_path('images'), $imageName);
+            $data['photo'] = $imageName;
+        }
+
+        Karyawan::create($data);
         return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
     }
 
@@ -43,11 +52,20 @@ class KaryawanController extends Controller
             'name' => 'required',
             'position' => 'required',
             'email' => 'required|email|unique:employees,email,'.$id,
-            'phone' => 'required',
+            'phone' => 'required|regex:/^[0-9]+$/',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $employee = Karyawan::find($id);
-        $employee->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            $imageName = time().'.'.$request->photo->extension();
+            $request->photo->move(public_path('images'), $imageName);
+            $data['photo'] = $imageName;
+        }
+
+        $employee->update($data);
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
     }
 

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.navigation')
 
 @section('title', 'Add Employee')
 
@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('employees.store') }}" method="POST">
+    <form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="name">Name:</label>
@@ -32,6 +32,10 @@
         <div class="form-group">
             <label for="phone">Phone:</label>
             <input type="text" name="phone" id="phone" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="photo">Photo:</label>
+            <input type="file" name="photo" id="photo" class="form-control">
         </div>
         <button type="submit" class="btn btn-success">Submit</button>
         <a href="{{ route('employees.index') }}" class="btn btn-secondary">Back</a>

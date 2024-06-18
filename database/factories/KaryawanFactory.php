@@ -16,6 +16,7 @@ class KaryawanFactory extends Factory
             'position' => $this->faker->jobTitle,
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->phoneNumber,
+            'photo' => $this->faker->imageUrl(100, 100, 'people'),
         ];
     }
 }

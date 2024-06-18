@@ -1,11 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.navigation')
 
 @section('title', 'Employees List')
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>Employees List</h1>
-        <a href="{{ route('employees.create') }}" class="btn btn-primary">Add Employee</a>
+        @if(auth()->user()->role == 'admin')
+            <a href="{{ route('employees.create') }}" class="btn btn-primary">Add Employee</a>
+        @endif
     </div>
 
     @if ($message = Session::get('success'))
@@ -17,6 +19,7 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
+                <th>Photo</th>
                 <th>Name</th>
                 <th>Position</th>
                 <th>Email</th>
@@ -27,17 +30,24 @@
         <tbody>
             @foreach ($employees as $employee)
                 <tr>
+                    <td class="text-center">
+                    <img src="{{ asset('images/' . $employee->photo) }}" alt="Employee Photo" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                    </td>
                     <td>{{ $employee->name }}</td>
                     <td>{{ $employee->position }}</td>
                     <td>{{ $employee->email }}</td>
                     <td>{{ $employee->phone }}</td>
                     <td>
-                        <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
+                        @if(auth()->user()->role == 'admin')
+                            <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        @else
+                            <span>No Actions Available</span>
+                        @endif
                     </td>
                 </tr>
             @endforeach
